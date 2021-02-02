@@ -18,31 +18,10 @@ jobs:
         ]
 
         include:
-          - name: linux
-            os: ubuntu-latest
-            artifact_name: visual
-            asset_name: visual-linux
           - name: windows
             os: windows-latest
             artifact_name: visual.exe
             asset_name: visual-windows.exe
-          - name: macos
-            os: macos-latest
-            artifact_name: visual
-            asset_name: visual-macos
-
-          - name: linux coco
-            os: ubuntu-latest
-            artifact_name: coco
-            asset_name: coco-linux
-          - name: windows coco
-            os: windows-latest
-            artifact_name: coco.exe
-            asset_name: coco-windows.exe
-          - name: macos coco
-            os: macos-latest
-            artifact_name: coco
-            asset_name: coco-macos
 
     steps:
       - uses: actions/checkout@v1
@@ -63,12 +42,7 @@ jobs:
           toolchain: stable
 
       - name: Build
-        run: |
-          if [ "$RUNNER_OS" == "Windows" ]; then
-              cargo build --target=i686-pc-windows-gnu --release
-          else
-              just release
-          fi
+        run: cargo build --target=i686-pc-windows-gnu --release
 
       - name: Upload binaries to release
         uses: svenstaro/upload-release-action@v1-release
