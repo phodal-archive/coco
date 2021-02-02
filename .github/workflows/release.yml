@@ -51,25 +51,24 @@ jobs:
         run: cargo install just
 
       - name: Install wget for Windows
-        if: "$RUNNER_OS" == "Windows"
         run:  |
-          choco install wget --no-progress
+          if [ "$RUNNER_OS" == "Windows" ]; then
+              choco install wget --no-progress
+          fi
+        shell: bash
 
       - uses: actions-rs/toolchain@v1
         with:
           profile: minimal
           toolchain: stable
 
-      - name: Build for Windows
-        if: "$RUNNER_OS" == "Windows"
-        run:  |
-          cargo build --target=i686-pc-windows-gnu --release
-        shell: bash
-
-      - name: Build for No Windows
-        if: "$RUNNER_OS" != "Windows"
-        run:  |
-          just build
+      - name: Build
+        run: |
+          if [ "$RUNNER_OS" == "Windows" ]; then
+              cargo build --target=i686-pc-windows-gnu --release
+         else
+              just release
+          fi
         shell: bash
 
       - name: Upload binaries to release
