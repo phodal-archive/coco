@@ -63,7 +63,12 @@ jobs:
           toolchain: stable
 
       - name: Build
-        run: just release
+        run: |
+          if [ "$RUNNER_OS" == "Windows" ]; then
+              cargo build --target=i686-pc-windows-gnu --release
+          else
+              just release
+          fi
 
       - name: Upload binaries to release
         uses: svenstaro/upload-release-action@v1-release
